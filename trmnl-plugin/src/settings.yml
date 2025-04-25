@@ -5,11 +5,11 @@
 #
 ---
 strategy: polling
-no_screen_padding: 'no'
-dark_mode: 'no'
-static_data: ''
+no_screen_padding: "no"
+dark_mode: "no"
+static_data: ""
 polling_verb: get
-polling_url: ''
-polling_headers: ''
+polling_url: ""
+polling_headers: ""
 name: My Plugin
 refresh_interval: 1440
