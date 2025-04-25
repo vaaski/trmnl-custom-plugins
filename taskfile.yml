@@ -5,4 +5,4 @@ version: "3"
 tasks:
   serve:
     cmds:
-      - docker run --rm --name trmnlp -p 4567:4567 -v $(PWD)/trmnl-plugin:/plugin trmnl/trmnlp
+      - docker run --rm --name trmnlp --net host -v $(PWD)/trmnl-plugin:/plugin trmnl/trmnlp

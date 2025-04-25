@@ -9,7 +9,7 @@ no_screen_padding: "no"
 dark_mode: "no"
 static_data: ""
 polling_verb: get
-polling_url: ""
+polling_url: "http://localhost:7834/static-test"
 polling_headers: ""
-name: My Plugin
+name: trmnl-obsidian-daily-notes
 refresh_interval: 1440

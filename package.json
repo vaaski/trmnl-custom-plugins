@@ -1,11 +1,11 @@
 {
-	"name": "trmnltest",
+	"name": "trmnl-obsidian-daily-notes",
 	"private": true,
 	"type": "module",
-	"module": "index.ts",
+	"module": "src/index.ts",
 	"scripts": {
-		"start": "bun index.ts",
-		"dev": "bun run --watch index.ts",
+		"start": "bun src/index.ts",
+		"dev": "bun run --watch src/index.ts",
 		"format": "prettier -w .",
 		"lint": "eslint ."
 	},
