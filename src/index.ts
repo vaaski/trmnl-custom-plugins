@@ -125,7 +125,16 @@ Bun.serve({
 	port: environment.DEV_PORT,
 	routes: {
 		"/ping": new Response("pong"),
-		"/notes": async () => Response.json(await getNotesJson()),
+		"/notes": async (request) => {
+			if (
+				request.headers.get("Authorization") !== environment.SHARED_SECRET &&
+				!environment.DISABLE_AUTH
+			) {
+				return new Response(undefined, { status: 401 })
+			}
+
+			return Response.json(await getNotesJson())
+		},
 
 		"/icon": new Response(
 			await Bun.file(path.join(import.meta.dir, "../public/obsidian-flat.svg")).bytes(),
