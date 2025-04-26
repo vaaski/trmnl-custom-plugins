@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm"
 import { unified } from "unified"
 import * as environment from "./environment"
 import type { List } from "mdast"
-import { weekendWorkTime } from "./utility"
+import { formatDate, weekendWorkTime } from "./utility"
 
 type Item = {
 	content: string
@@ -18,8 +18,7 @@ type Column = {
 }
 
 type Notes = {
-	left: Column
-	right: Column
+	columns: Column[]
 	date: string
 }
 
@@ -95,22 +94,25 @@ const getNotesJson = async (): Promise<Notes> => {
 	if (!work) throw new Error("work not found")
 
 	const returnData: Notes = {
-		date: new Date(newestFileName.replace(".md", "")).toISOString(),
-		left: {
-			title: "life",
-			items: life,
-		},
-		right: {
-			title: "work",
-			items: work,
-		},
+		date: formatDate(new Date(newestFileName.replace(".md", ""))),
+		columns: [
+			{
+				title: "life",
+				items: life,
+			},
+		],
 	}
 
-	if (!weekendWorkTime()) {
-		returnData.right = {
+	if (weekendWorkTime()) {
+		returnData.columns.push({
 			title: "gym",
 			items: gym,
-		}
+		})
+	} else {
+		returnData.columns.push({
+			title: "work",
+			items: work,
+		})
 	}
 
 	return returnData

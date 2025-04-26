@@ -1,19 +1,24 @@
 <div class="layout">
 	<div class="columns">
-		<div class="column"></div>
-		<div class="column markdown">
-			<div class="item">
-				<div class="meta"></div>
-				<div class="content">
-					<span class="title title--small">Team Meeting</span>
-				</div>
+		{% for column in columns %}
+			<div class="column markdown">
+				<span class="title">{{ column.title }}</span>
+
+				{% for item in column.items %}
+					<div class="item ml--{{ item.depth | times: 5 }}">
+						<div class="meta"></div>
+						<div class="content">
+							<span class="clamp--3" style="word-break: auto-phrase;">{{ item.content }}</span>
+						</div>
+					</div>
+				{% endfor %}
 			</div>
-		</div>
+		{% endfor %}
 	</div>
 </div>
 
 <div class="title_bar">
 	<img class="image" src="{{ trmnl.plugin_settings.custom_fields_values.icon_url }}" />
 	<span class="title">Obsidian Daily</span>
-	<!-- <span class="instance">Fortnite</span> -->
+	<span class="instance">{{ date }}</span>
 </div>

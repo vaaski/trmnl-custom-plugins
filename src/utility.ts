@@ -17,3 +17,13 @@ export const weekendWorkTime = () => {
 	}
 	return false
 }
+
+const dateFormatter = new Intl.DateTimeFormat("de-DE", {
+	weekday: "long",
+	year: "numeric",
+	month: "long",
+	day: "numeric",
+})
+export const formatDate = (date: Date | number) => {
+	return dateFormatter.format(date)
+}

@@ -1,1 +1,22 @@
-half vertical!
+<div class="layout">
+	<div class="columns">
+		<div class="column markdown">
+			<span class="title">{{ columns[0].title }}</span>
+
+			{% for item in columns[0].items %}
+				<div class="item ml--{{ item.depth | times: 5 }}">
+					<div class="meta"></div>
+					<div class="content">
+						<span class="clamp--3" style="word-break: auto-phrase;">{{ item.content }}</span>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+
+<div class="title_bar">
+	<img class="image" src="{{ trmnl.plugin_settings.custom_fields_values.icon_url }}" />
+	<span class="title">Obsidian</span>
+	<span class="instance">{{ date }}</span>
+</div>
