@@ -3,6 +3,13 @@
 version: "3"
 
 tasks:
-  serve:
+  trmnl:serve:
     cmds:
       - docker run --rm --name trmnlp --net host -v $(PWD)/trmnl-plugin:/plugin trmnl/trmnlp
+
+  bun:dev:
+    cmds:
+      - bun run dev
+
+  dev:
+    deps: [trmnl:serve, bun:dev]

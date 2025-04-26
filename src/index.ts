@@ -1,8 +1,59 @@
 import { readdir } from "node:fs/promises"
-import * as environment from "./environment"
 import path from "node:path"
+import remarkParse from "remark-parse"
+import remarkGfm from "remark-gfm"
+import { unified } from "unified"
+import * as environment from "./environment"
+import type { List } from "mdast"
+import { weekendWorkTime } from "./utility"
 
-const getNotesJson = async () => {
+type Item = {
+	content: string
+	depth: number
+}
+
+type Column = {
+	title: string
+	items: Item[]
+}
+
+type Notes = {
+	left: Column
+	right: Column
+	date: string
+}
+
+const parseList = (list: List, depth = 0): Item[] => {
+	const items: Item[] = []
+
+	for (const listItem of list.children) {
+		if (listItem.type !== "listItem") continue
+
+		// Get the first paragraph in the list item
+		const paragraph = listItem.children.find((child) => child.type === "paragraph")
+		if (!paragraph) continue
+
+		// Combine all text nodes in the paragraph
+		const content = paragraph.children
+			.filter((child) => child.type === "text")
+			.map((child) => child.value)
+			.join("")
+
+		// only include unchecked items
+		if (listItem.checked === false) items.push({ content, depth })
+
+		// Handle nested lists recursively
+		const nestedList = listItem.children.find((child) => child.type === "list")
+		if (nestedList) {
+			const nestedItems = parseList(nestedList, depth + 1)
+			items.push(...nestedItems)
+		}
+	}
+
+	return items
+}
+
+const getNotesJson = async (): Promise<Notes> => {
 	const files = await readdir(environment.OBSIDIAN_DAILY_NOTES_PATH)
 	const [newestFileName] = files.sort((a, b) => {
 		return (
@@ -15,49 +66,72 @@ const getNotesJson = async () => {
 	const file = Bun.file(path.join(environment.OBSIDIAN_DAILY_NOTES_PATH, newestFileName))
 	const fileContent = await file.text()
 
-	console.log(fileContent)
+	const markdownRoot = unified().use(remarkParse).use(remarkGfm).parse(fileContent)
+
+	const categories: Record<string, Item[]> = {}
+
+	let currentCategory: string | undefined
+	for (const topLevel of markdownRoot.children) {
+		if (topLevel.type === "heading") {
+			const [headingText] = topLevel.children
+			if (!headingText || headingText.type !== "text") continue
+
+			currentCategory = headingText.value
+		} else if (topLevel.type === "list") {
+			if (!currentCategory) continue
+
+			const items = parseList(topLevel)
+			if (items.length > 0) categories[currentCategory] = items
+		}
+	}
+
+	const life = categories["life"]
+	if (!life) throw new Error("life not found")
+
+	const gym = categories["gym"]
+	if (!gym) throw new Error("gym not found")
+
+	const work = categories["work"]
+	if (!work) throw new Error("work not found")
+
+	const returnData: Notes = {
+		date: new Date(newestFileName.replace(".md", "")).toISOString(),
+		left: {
+			title: "life",
+			items: life,
+		},
+		right: {
+			title: "work",
+			items: work,
+		},
+	}
+
+	if (!weekendWorkTime()) {
+		returnData.right = {
+			title: "gym",
+			items: gym,
+		}
+	}
+
+	return returnData
 }
 
-console.log(await getNotesJson())
+await getNotesJson()
 
 Bun.serve({
 	port: environment.DEV_PORT,
 	routes: {
-		// Static routes
-		"/status": new Response("OKe"),
+		"/ping": new Response("pong"),
 		"/static-test": Response.json({ testData: "yup tester" }),
+		"/notes": async () => Response.json(await getNotesJson()),
 
-		// 	// Dynamic routes
-		// 	"/users/:id": (req) => {
-		// 		return new Response(`Hello User ${req.params.id}!`)
-		// 	},
-
-		// 	// Per-HTTP method handlers
-		// 	"/api/posts": {
-		// 		GET: () => new Response("List posts"),
-		// 		POST: async (req) => {
-		// 			const body = await req.json()
-		// 			return Response.json({ created: true, ...body })
-		// 		},
-		// 	},
-
-		// 	// Wildcard route for all routes that start with "/api/" and aren't otherwise matched
-		// 	"/api/*": Response.json({ message: "Not found" }, { status: 404 }),
-
-		// 	// Redirect from /blog/hello to /blog/hello/world
-		// 	"/blog/hello": Response.redirect("/blog/hello/world"),
-
-		// 	// Serve a file by buffering it in memory
-		// 	"/favicon.ico": new Response(await Bun.file("./favicon.ico").bytes(), {
-		// 		headers: {
-		// 			"Content-Type": "image/x-icon",
-		// 		},
-		// 	}),
+		"/icon": new Response(
+			await Bun.file(path.join(import.meta.dir, "../public/obsidian-flat.svg")).bytes(),
+			{
+				headers: {
+					"Content-Type": "image/svg+xml",
+				},
+			},
+		),
 	},
-
-	// // (optional) fallback for unmatched routes:
-	// // Required if Bun's version < 1.2.3
-	// fetch(req) {
-	// 	return new Response("Not Found", { status: 404 })
-	// },
 })

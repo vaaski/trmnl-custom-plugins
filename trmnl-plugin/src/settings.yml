@@ -13,3 +13,10 @@ polling_url: "http://localhost:7834/static-test"
 polling_headers: ""
 name: trmnl-obsidian-daily-notes
 refresh_interval: 1440
+custom_fields:
+  - keyname: icon_url
+    field_type: string
+    name: Icon URL
+    description: Direct URL to the Obsidian Icon
+    placeholder: "http://localhost:7834/icon"
+    default: "http://localhost:7834/icon"
