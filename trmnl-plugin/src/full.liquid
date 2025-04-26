@@ -5,10 +5,10 @@
 				<span class="title">{{ column.title }}</span>
 
 				{% for item in column.items %}
-					<div class="item ml--{{ item.depth | times: 5 }}">
+					<div class="item ml--{{ item.depth | times: 5 }} {% if item.checked %}text--gray-4{% endif %}">
 						<div class="meta"></div>
 						<div class="content">
-							<span class="clamp--3" style="word-break: auto-phrase;">{{ item.content }}</span>
+							<span class="clamp--3" style="word-break: break-word;">{{ item.content }}</span>
 						</div>
 					</div>
 				{% endfor %}

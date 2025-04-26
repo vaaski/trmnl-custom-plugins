@@ -10,6 +10,7 @@ import { formatDate, weekendWorkTime } from "./utility"
 type Item = {
 	content: string
 	depth: number
+	checked: boolean
 }
 
 type Column = {
@@ -28,20 +29,22 @@ const parseList = (list: List, depth = 0): Item[] => {
 	for (const listItem of list.children) {
 		if (listItem.type !== "listItem") continue
 
-		// Get the first paragraph in the list item
+		// get the first paragraph in the list item
 		const paragraph = listItem.children.find((child) => child.type === "paragraph")
 		if (!paragraph) continue
 
-		// Combine all text nodes in the paragraph
+		// combine all text nodes in the paragraph
 		const content = paragraph.children
 			.filter((child) => child.type === "text")
 			.map((child) => child.value)
 			.join("")
 
-		// only include unchecked items
-		if (listItem.checked === false) items.push({ content, depth })
+		// only include items with a checkbox
+		if (listItem.checked !== undefined && listItem.checked !== null) {
+			items.push({ content, depth, checked: listItem.checked })
+		}
 
-		// Handle nested lists recursively
+		// handle nested lists recursively
 		const nestedList = listItem.children.find((child) => child.type === "list")
 		if (nestedList) {
 			const nestedItems = parseList(nestedList, depth + 1)
@@ -118,13 +121,10 @@ const getNotesJson = async (): Promise<Notes> => {
 	return returnData
 }
 
-await getNotesJson()
-
 Bun.serve({
 	port: environment.DEV_PORT,
 	routes: {
 		"/ping": new Response("pong"),
-		"/static-test": Response.json({ testData: "yup tester" }),
 		"/notes": async () => Response.json(await getNotesJson()),
 
 		"/icon": new Response(
@@ -137,3 +137,5 @@ Bun.serve({
 		),
 	},
 })
+
+console.log("obsidian-daily-notes server started")

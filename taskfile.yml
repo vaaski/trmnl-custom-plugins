@@ -12,4 +12,4 @@ tasks:
       - bun run dev
 
   dev:
-    deps: [trmnl:serve, bun:dev]
+    deps: [bun:dev, trmnl:serve]
