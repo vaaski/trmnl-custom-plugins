@@ -4,13 +4,19 @@
 			<span class="title">{{ columns[0].title }}</span>
 
 			{% if columns[0].items.size == 0 %}
-				<img src="{{ trmnl.plugin_settings.polling_url | replace: "/notes", "/placeholder" }}" class="image-dither" style="max-width: 10rem;">
+				<img
+					src="{{ trmnl.plugin_settings.polling_url | replace: "/notes", "/placeholder" }}"
+					class="image-dither"
+					style="max-width: 10rem;"
+				>
 			{% else %}
 				{% for item in columns[0].items %}
 					<div class="item ml--{{ item.depth | times: 5 }} {% if item.checked %}text--gray-4{% endif %}">
 						<div class="meta"></div>
 						<div class="content">
-							<span class="clamp--3" style="word-break: break-word;">{{ item.content }}</span>
+							<span class="clamp--3" style="word-break: break-word;">
+								{{- item.content -}}
+							</span>
 						</div>
 					</div>
 				{% endfor %}
@@ -20,7 +26,10 @@
 </div>
 
 <div class="title_bar">
-	<img class="image" src="{{ trmnl.plugin_settings.polling_url | replace: "/notes", "/icon" }}"" />
+	<img
+		class="image"
+		src="{{ trmnl.plugin_settings.polling_url | replace: "/notes", "/icon" }}"
+	>
 	<span class="title">Obsidian</span>
 	<span class="instance">{{ date }}</span>
 </div>

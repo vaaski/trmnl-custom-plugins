@@ -1,4 +1,5 @@
 {
+	"plugins": ["@shopify/prettier-plugin-liquid"],
 	"semi": false,
 	"useTabs": true,
 	"printWidth": 90
