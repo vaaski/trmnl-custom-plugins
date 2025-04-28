@@ -7,9 +7,7 @@ watch:
   - src
 
 # values of custom fields (defined in src/settings.yml)
-custom_fields: {
-  icon_url: "http://localhost:7834/icon"
-}
+custom_fields: {}
 
 # override variables
 variables:

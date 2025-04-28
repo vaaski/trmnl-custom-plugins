@@ -4,8 +4,8 @@ no_screen_padding: 'no'
 dark_mode: 'no'
 static_data: ''
 polling_verb: get
-polling_url: https://daily-notes.einkacken.com/notes
-polling_headers: ""
-id: 46412
+polling_url: https://trmnl.einkacken.com/notes
+polling_headers: ''
+id: 47284
 name: trmnl-obsidian-daily-notes
 refresh_interval: 15

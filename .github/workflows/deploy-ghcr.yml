@@ -22,8 +22,8 @@ jobs:
 
       - name: "Build Image"
         run: |
-          docker build . --tag ghcr.io/vaaski/trmnl-obsidian-daily-notes:latest
-          docker push ghcr.io/vaaski/trmnl-obsidian-daily-notes:latest
+          docker build . --tag ghcr.io/vaaski/trmnl-custom-plugins:latest
+          docker push ghcr.io/vaaski/trmnl-custom-plugins:latest
 
       - name: "Update instance"
         run: |

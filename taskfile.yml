@@ -2,23 +2,26 @@
 
 version: "3"
 
+vars:
+  DOCKER_TAG: ghcr.io/vaaski/trmnl-custom-plugins:latest
+
 tasks:
-  trmnl:serve:
+  trmnl:serve:obsidian:
     cmds:
-      - docker run --rm --name trmnlp --net host -v $(PWD)/trmnl-plugin:/plugin trmnl/trmnlp
+      - docker run --rm --name trmnlp --net host -v $(PWD)/trmnl-plugin/obsidian:/plugin trmnl/trmnlp
 
   bun:dev:
     cmds:
       - bun run dev
 
-  dev:
-    deps: [bun:dev, trmnl:serve]
+  dev:obsidian:
+    deps: [bun:dev, trmnl:serve:obsidian]
 
   docker:build:
     cmds:
-      - docker build -t vaaski/trmnl-obsidian-daily-notes .
+      - docker build -t {{.DOCKER_TAG}} .
 
   docker:run:
     dotenv: [".env"]
     cmds:
-      - docker run --rm -it -p 7834:7834 -e SHARED_SECRET=$SHARED_SECRET -v $OBSIDIAN_DAILY_NOTES_PATH:/notes vaaski/trmnl-obsidian-daily-notes
+      - docker run --rm -it -p 7834:7834 -e SHARED_SECRET=$SHARED_SECRET -v $OBSIDIAN_DAILY_NOTES_PATH:/notes {{.DOCKER_TAG}}
