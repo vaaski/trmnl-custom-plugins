@@ -130,6 +130,8 @@ Bun.serve({
 				return new Response(undefined, { status: 401 })
 			}
 
+			console.log("received request", request.headers.toJSON())
+
 			return Response.json(await getNotesJson())
 		},
 
