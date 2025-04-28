@@ -1,22 +1,11 @@
-#
-# Changes to this file will be overwritten by `trmnlp pull`.
-#
-# Docs: https://help.usetrmnl.com/en/articles/10542599-importing-and-exporting-private-plugins#h_581fb988f0
-#
 ---
 strategy: polling
-no_screen_padding: "no"
-dark_mode: "no"
-static_data: ""
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
 polling_verb: get
-polling_url: "http://localhost:7834/notes"
+polling_url: https://daily-notes.einkacken.com/notes
 polling_headers: ""
+id: 46412
 name: trmnl-obsidian-daily-notes
-refresh_interval: 1440
-custom_fields:
-  - keyname: icon_url
-    field_type: string
-    name: Icon URL
-    description: Direct URL to the Obsidian Icon
-    placeholder: "http://localhost:7834/icon"
-    default: "http://localhost:7834/icon"
+refresh_interval: 15

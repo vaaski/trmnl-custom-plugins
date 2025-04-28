@@ -4,21 +4,25 @@
 			<div class="column markdown">
 				<span class="title">{{ column.title }}</span>
 
-				{% for item in column.items %}
-					<div class="item ml--{{ item.depth | times: 5 }} {% if item.checked %}text--gray-4{% endif %}">
-						<div class="meta"></div>
-						<div class="content">
-							<span class="clamp--3" style="word-break: break-word;">{{ item.content }}</span>
+				{% if column.items.size == 0 %}
+					<img src="{{ trmnl.plugin_settings.polling_url | replace: "/notes", "/placeholder" }}" class="image-dither" style="max-width: 10rem;">
+				{% else %}
+					{% for item in column.items %}
+						<div class="item ml--{{ item.depth | times: 5 }} {% if item.checked %}text--gray-4{% endif %}">
+							<div class="meta"></div>
+							<div class="content">
+								<span class="clamp--3" style="word-break: break-word;">{{ item.content }}</span>
+							</div>
 						</div>
-					</div>
-				{% endfor %}
+					{% endfor %}
+				{% endif %}
 			</div>
 		{% endfor %}
 	</div>
 </div>
 
 <div class="title_bar">
-	<img class="image" src="{{ trmnl.plugin_settings.custom_fields_values.icon_url }}" />
+	<img class="image" src="{{ trmnl.plugin_settings.polling_url | replace: "/notes", "/icon" }}" />
 	<span class="title">Obsidian Daily</span>
 	<span class="instance">{{ date }}</span>
 </div>

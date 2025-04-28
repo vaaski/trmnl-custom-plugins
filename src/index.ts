@@ -87,14 +87,11 @@ const getNotesJson = async (): Promise<Notes> => {
 		}
 	}
 
-	const life = categories["life"]
-	if (!life) throw new Error("life not found")
+	const life = categories["life"] ?? []
 
-	const gym = categories["gym"]
-	if (!gym) throw new Error("gym not found")
+	const gym = categories["gym"] ?? []
 
-	const work = categories["work"]
-	if (!work) throw new Error("work not found")
+	const work = categories["work"] ?? []
 
 	const returnData: Notes = {
 		date: formatDate(new Date(newestFileName.replace(".md", ""))),
@@ -138,13 +135,13 @@ Bun.serve({
 
 		"/icon": new Response(
 			await Bun.file(path.join(import.meta.dir, "../public/obsidian-flat.svg")).bytes(),
-			{
-				headers: {
-					"Content-Type": "image/svg+xml",
-				},
-			},
+			{ headers: { "Content-Type": "image/svg+xml" } },
+		),
+		"/placeholder": new Response(
+			await Bun.file(path.join(import.meta.dir, "../public/placeholder.png")).bytes(),
+			{ headers: { "Content-Type": "image/png" } },
 		),
 	},
 })
 
-console.log("obsidian-daily-notes server started")
+console.log(`obsidian-daily-notes server started on port ${environment.DEV_PORT}`)
