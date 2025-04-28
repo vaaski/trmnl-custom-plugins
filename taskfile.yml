@@ -13,3 +13,12 @@ tasks:
 
   dev:
     deps: [bun:dev, trmnl:serve]
+
+  docker:build:
+    cmds:
+      - docker build -t vaaski/trmnl-obsidian-daily-notes .
+
+  docker:run:
+    dotenv: [".env"]
+    cmds:
+      - docker run --rm -it -p 7834:7834 -e SHARED_SECRET=$SHARED_SECRET -v $OBSIDIAN_DAILY_NOTES_PATH:/notes vaaski/trmnl-obsidian-daily-notes
