@@ -9,7 +9,7 @@ no_screen_padding: 'no'
 dark_mode: 'no'
 static_data: ''
 polling_verb: get
-polling_url: http://localhost:7834/hass-temp
+polling_url: http://localhost:7834/hass
 polling_headers: ''
 name: hass-temp
 refresh_interval: 15

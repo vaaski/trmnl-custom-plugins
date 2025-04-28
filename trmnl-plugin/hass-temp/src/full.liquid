@@ -1,1 +1,110 @@
-full!
+<div class="layout--col">
+	<div class="grid">
+		<div id="chart-0" class="col--span-1" style="width: 100%"></div>
+		<div id="chart-1" class="col--span-1" style="width: 100%"></div>
+	</div>
+
+	<div class="grid">
+		<div id="chart-2" class="col--span-1" style="width: 100%"></div>
+		<div id="chart-3" class="col--span-1" style="width: 100%"></div>
+	</div>
+</div>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.min.js"></script>
+
+<script
+	type="text/javascript"
+>
+	// recommended configs to achieve the TRMNL Framework aesthetic
+	var createChart = function (id, data, minmax, title) {
+		new Chartkick['LineChart'](id, data, {
+			adapter: 'highcharts', // chartjs, google, etc available
+			prefix: '',
+			thousands: ',',
+			points: false,
+			colors: ['black'],
+			curve: true,
+			library: {
+				title: {
+					margin: 5,
+					text: title,
+					style: {
+						fontSize: '1rem',
+						fontFamily: 'NicoClean',
+						fontWeight: 500,
+					},
+				},
+				chart: {
+					height: 235,
+				},
+				plotOptions: {
+					series: {
+						animation: false,
+						lineWidth: 4,
+					},
+				},
+				yAxis: {
+					...minmax,
+					labels: {
+						distance: 10,
+						style: {
+							fontSize: '16px',
+							color: '#000000',
+						},
+					},
+					gridLineDashStyle: 'shortdot',
+					gridLineWidth: 1,
+					gridLineColor: '#000000',
+					tickAmount: 5,
+				},
+				xAxis: {
+					type: 'daytime',
+					labels: {
+						enabled: false,
+						style: {
+							fontSize: '16px',
+							color: '#000000',
+						},
+					},
+					lineWidth: 0,
+					gridLineDashStyle: 'dot',
+					tickWidth: 1,
+					tickLength: 0,
+					gridLineWidth: 1,
+					gridLineColor: '#000000',
+				},
+			},
+		})
+	}
+
+	// ensure your chart loads before plugin render is generated
+	if ('Chartkick' in window) {
+		createChart(
+			'chart-0',
+			JSON.parse(`{{data[0].states}}`),
+			JSON.parse(`{{data[0].minMax}}`),
+			'{{data[0].name}}',
+		)
+		createChart(
+			'chart-1',
+			JSON.parse(`{{data[1].states}}`),
+			JSON.parse(`{{data[1].minMax}}`),
+			'{{data[1].name}}',
+		)
+		createChart(
+			'chart-2',
+			JSON.parse(`{{data[2].states}}`),
+			JSON.parse(`{{data[2].minMax}}`),
+			'{{data[2].name}}',
+		)
+		createChart(
+			'chart-3',
+			JSON.parse(`{{data[3].states}}`),
+			JSON.parse(`{{data[3].minMax}}`),
+			'{{data[3].name}}',
+		)
+	} else {
+		window.addEventListener('chartkick:load', createChart, true)
+	}
+</script>
