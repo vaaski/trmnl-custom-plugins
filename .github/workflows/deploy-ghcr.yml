@@ -25,6 +25,6 @@ jobs:
           docker build . --tag ghcr.io/vaaski/trmnl-obsidian-daily-notes:latest
           docker push ghcr.io/vaaski/trmnl-obsidian-daily-notes:latest
 
-      # - name: "Update instance"
-      #   run: |
-      #     curl -X POST ${{ secrets.PORTAINER_WEBHOOK_URL }}
+      - name: "Update instance"
+        run: |
+          curl -X POST ${{ secrets.PORTAINER_WEBHOOK_URL }}
