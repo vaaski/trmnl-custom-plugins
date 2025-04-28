@@ -7,5 +7,5 @@ polling_verb: get
 polling_url: https://trmnl.einkacken.com/notes
 polling_headers: ''
 id: 47284
-name: trmnl-obsidian-daily-notes
+name: obsidian-daily-notes
 refresh_interval: 15
