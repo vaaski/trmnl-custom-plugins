@@ -1,13 +1,17 @@
 <div class="layout--col">
-	<div class="grid">
-		<div id="chart-0" class="col--span-1" style="width: 100%"></div>
-		<div id="chart-1" class="col--span-1" style="width: 100%"></div>
-	</div>
-
-	<div class="grid">
-		<div id="chart-2" class="col--span-1" style="width: 100%"></div>
-		<div id="chart-3" class="col--span-1" style="width: 100%"></div>
-	</div>
+	{% for row in data %}
+		<div class="grid" style="--gap: 0px">
+			{% for col in row %}
+				<div
+					id="chart-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}"
+					class="col--span-1"
+					style="width: 100%"
+				>
+					{{ forloop.parentloop.index0 }} - {{ forloop.index0 }}
+				</div>
+			{% endfor %}
+		</div>
+	{% endfor %}
 </div>
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -17,7 +21,7 @@
 	type="text/javascript"
 >
 	// recommended configs to achieve the TRMNL Framework aesthetic
-	var createChart = function (id, data, minmax, title) {
+	var createChart = function (id, data, minmax, title, enableYAxis = true) {
 		new Chartkick['LineChart'](id, data, {
 			adapter: 'highcharts', // chartjs, google, etc available
 			prefix: '',
@@ -48,6 +52,7 @@
 					...minmax,
 					labels: {
 						distance: 10,
+						enabled: enableYAxis,
 						style: {
 							fontSize: '16px',
 							color: '#000000',
@@ -80,30 +85,19 @@
 
 	// ensure your chart loads before plugin render is generated
 	if ('Chartkick' in window) {
+		// {% for row in data %}
+		// {% for col in row %}
 		createChart(
-			'chart-0',
-			JSON.parse(`{{data[0].states}}`),
-			JSON.parse(`{{data[0].minMax}}`),
-			'{{data[0].name}}',
+			'chart-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}',
+			JSON.parse(`{{col.states}}`),
+			JSON.parse(`{{col.minMax}}`),
+			'{{col.name}}',
+			// {% if forloop.index0 != 0 %}
+			false,
+			// {% endif %}
 		)
-		createChart(
-			'chart-1',
-			JSON.parse(`{{data[1].states}}`),
-			JSON.parse(`{{data[1].minMax}}`),
-			'{{data[1].name}}',
-		)
-		createChart(
-			'chart-2',
-			JSON.parse(`{{data[2].states}}`),
-			JSON.parse(`{{data[2].minMax}}`),
-			'{{data[2].name}}',
-		)
-		createChart(
-			'chart-3',
-			JSON.parse(`{{data[3].states}}`),
-			JSON.parse(`{{data[3].minMax}}`),
-			'{{data[3].name}}',
-		)
+		// {% endfor %}
+		// {% endfor %}
 	} else {
 		window.addEventListener('chartkick:load', createChart, true)
 	}

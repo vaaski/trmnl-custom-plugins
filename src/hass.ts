@@ -1,3 +1,4 @@
+import { getCurrentWeather } from "./brightsky"
 import * as environment from "./environment"
 
 export type HASSResponse = {
@@ -6,6 +7,12 @@ export type HASSResponse = {
 	attributes?: object
 	last_changed: string
 	last_updated?: string
+}
+
+export type TRMNLData = {
+	name: string
+	minMax: string
+	states: string
 }
 
 const getEntityMeta = (dataList: HASSResponse[]) => {
@@ -22,10 +29,48 @@ const getEntityMeta = (dataList: HASSResponse[]) => {
 		max: isHumidity ? 65 : 30,
 	}
 
-	return [`${name} ${lastValue}${unit}`, minMax]
+	return {
+		name: `${name} ${lastValue}${unit}`,
+		minMax,
+		isHumidity,
+	}
 }
 
-export const getHassDetails = async () => {
+const transformCurrentWeather = async (): Promise<[TRMNLData, TRMNLData]> => {
+	const data = await getCurrentWeather()
+
+	const humidity = {
+		name: "outside humidity",
+		minMax: JSON.stringify({ min: 35, max: 65 }),
+		states: JSON.stringify(
+			data.weather.map((weather) => [
+				new Date(weather.timestamp).getTime(),
+				weather.relative_humidity,
+			]),
+		),
+	}
+
+	const temperature = {
+		name: "outside temperature",
+		minMax: JSON.stringify({ min: 10, max: 30 }),
+		states: JSON.stringify(
+			data.weather.map((weather) => [
+				new Date(weather.timestamp).getTime(),
+				weather.temperature,
+			]),
+		),
+	}
+
+	const lastEntry = data.weather.at(-1)
+	if (lastEntry) {
+		humidity.name += ` ${lastEntry.relative_humidity}%`
+		temperature.name += ` ${lastEntry.temperature}°C`
+	}
+
+	return [humidity, temperature]
+}
+
+export const getHassDetails = async (): Promise<[TRMNLData[], TRMNLData[]]> => {
 	const requestUrl = new URL("/api/history/period", environment.HASS_ADDRESS)
 	requestUrl.searchParams.set("filter_entity_id", environment.HASS_ENTITIES)
 	requestUrl.searchParams.set("no_attributes", "")
@@ -39,15 +84,37 @@ export const getHassDetails = async () => {
 
 	const data = (await dataRequest.json()) as HASSResponse[][]
 
-	return data.map((dataList) => {
-		const [name, minMax] = getEntityMeta(dataList)
-
+	const withMeta = data.map((dataList) => {
 		return {
-			name,
-			minMax: JSON.stringify(minMax),
-			states: JSON.stringify(
-				dataList.map((state) => [new Date(state.last_changed).getTime(), state.state]),
-			),
+			dataList,
+			meta: getEntityMeta(dataList),
 		}
 	})
+
+	const dataMapper = (data: (typeof withMeta)[number]) => {
+		return {
+			name: data.meta.name,
+			minMax: JSON.stringify(data.meta.minMax),
+			states: JSON.stringify(
+				data.dataList.map((state) => [
+					new Date(state.last_changed).getTime(),
+					state.state,
+				]),
+			),
+		}
+	}
+
+	const humidity = withMeta
+		.filter((item) => item.meta.isHumidity)
+		.map((element) => dataMapper(element))
+
+	const temperature = withMeta
+		.filter((item) => !item.meta.isHumidity)
+		.map((element) => dataMapper(element))
+
+	const [outsideHumidity, outsideTemperature] = await transformCurrentWeather()
+	humidity.push(outsideHumidity)
+	temperature.push(outsideTemperature)
+
+	return [humidity, temperature]
 }
