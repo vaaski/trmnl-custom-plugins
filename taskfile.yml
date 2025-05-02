@@ -21,11 +21,18 @@ tasks:
     cmds:
       - docker run -v $(PWD)/trmnl-plugin/hass-temp:/plugin {{.DOCKER_TRMNLP_FLAGS}} trmnl/trmnlp
 
+  trmnl:serve:news:
+    cmds:
+      - docker run -v $(PWD)/trmnl-plugin/news:/plugin {{.DOCKER_TRMNLP_FLAGS}} trmnl/trmnlp
+
   dev:obsidian:
     deps: [bun:dev, trmnl:serve:obsidian]
 
   dev:hass-temp:
     deps: [bun:dev, trmnl:serve:hass-temp]
+
+  dev:news:
+    deps: [bun:dev, trmnl:serve:news]
 
 # ------------------------------------------------------------------------------
 

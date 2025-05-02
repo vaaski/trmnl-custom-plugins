@@ -25,6 +25,7 @@
 		"typescript": "^5"
 	},
 	"dependencies": {
+		"fast-xml-parser": "^5.2.1",
 		"remark": "^15.0.1",
 		"remark-gfm": "^4.0.1"
 	}

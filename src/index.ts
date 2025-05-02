@@ -1,5 +1,6 @@
 import * as environment from "./environment"
 import { getHassDetails } from "./hass"
+import { getNews } from "./news"
 import { getNotesJson } from "./obsidian"
 import { checkAuth, publicStaticFile } from "./utility"
 
@@ -25,6 +26,15 @@ Bun.serve({
 			console.log("received /hass request", request.headers.toJSON())
 
 			return Response.json(await getHassDetails())
+		},
+
+		"/news": async (request) => {
+			const forbidden = checkAuth(request)
+			if (forbidden) return forbidden
+
+			console.log("received /news request", request.headers.toJSON())
+
+			return Response.json(await getNews())
 		},
 
 		"/icon-hass": await publicStaticFile("hass.svg", "image/svg+xml"),

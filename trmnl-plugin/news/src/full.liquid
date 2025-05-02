@@ -1,0 +1,37 @@
+<div class="layout">
+	<div class="columns">
+		<div class="column">
+			<div
+				class="list"
+				data-list-limit="true"
+				data-list-max-height="400"
+				data-list-hidden-count="true"
+				data-list-max-columns="2"
+			>
+				{% for story in stories %}
+					<div class="item">
+						<div class="content">
+							<span class="title title--small clamp--3" style="word-break: break-word;">
+								{{- story.title -}}
+							</span>
+							<span class="description clamp--3" style="word-break: break-word;">
+								{{- story.description -}}
+							</span>
+							<div class="flex gap--xsmall">
+								<span class="label label--small label--inverted">
+									{{- story.category -}}
+								</span>
+								<span class="label label--small label--underline">{{ story.date }}</span>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="title_bar">
+	<img class="image" src="{{logo}}" style="max-height: 1.25rem;">
+	<span class="instance">{{ title }}</span>
+</div>
