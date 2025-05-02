@@ -1,19 +1,7 @@
+import type { HASSResponse, HassTRMNLData } from "./types/hass"
+
 import { getCurrentWeather } from "./brightsky"
 import * as environment from "./environment"
-
-export type HASSResponse = {
-	entity_id?: string
-	state: string
-	attributes?: object
-	last_changed: string
-	last_updated?: string
-}
-
-export type TRMNLData = {
-	name: string
-	minMax: string
-	states: string
-}
 
 const getEntityMeta = (dataList: HASSResponse[]) => {
 	const entityName = dataList?.[0]?.entity_id ?? "entity id missing"
@@ -36,7 +24,7 @@ const getEntityMeta = (dataList: HASSResponse[]) => {
 	}
 }
 
-const transformCurrentWeather = async (): Promise<[TRMNLData, TRMNLData]> => {
+const transformCurrentWeather = async (): Promise<[HassTRMNLData, HassTRMNLData]> => {
 	const data = await getCurrentWeather()
 
 	const humidity = {
@@ -75,7 +63,7 @@ const transformCurrentWeather = async (): Promise<[TRMNLData, TRMNLData]> => {
 	return [humidity, temperature]
 }
 
-export const getHassDetails = async (): Promise<[TRMNLData[], TRMNLData[]]> => {
+export const getHassDetails = async (): Promise<[HassTRMNLData[], HassTRMNLData[]]> => {
 	const requestUrl = new URL("/api/history/period", environment.HASS_ADDRESS)
 	requestUrl.searchParams.set("filter_entity_id", environment.HASS_ENTITIES)
 	requestUrl.searchParams.set("no_attributes", "")

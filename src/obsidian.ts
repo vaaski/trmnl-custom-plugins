@@ -1,27 +1,13 @@
+import type { List } from "mdast"
+import type { Item, Notes } from "./types/obsidian"
+
 import { readdir } from "node:fs/promises"
 import path from "node:path"
-import remarkParse from "remark-parse"
 import remarkGfm from "remark-gfm"
+import remarkParse from "remark-parse"
 import { unified } from "unified"
 import * as environment from "./environment"
-import type { List } from "mdast"
 import { formatDate, weekendWorkTime } from "./utility"
-
-type Item = {
-	content: string
-	depth: number
-	checked: boolean
-}
-
-type Column = {
-	title: string
-	items: Item[]
-}
-
-type Notes = {
-	columns: Column[]
-	date: string
-}
 
 const parseList = (list: List, depth = 0): Item[] => {
 	const items: Item[] = []
