@@ -61,6 +61,7 @@ export const getCurrentWeather = async () => {
 	requestUrl.searchParams.set("date", yesterday.toISOString())
 	requestUrl.searchParams.set("last_date", new Date().toISOString())
 
+	console.log("requesting", requestUrl.toString())
 	const response = await fetch(requestUrl)
 	const data = await response.json()
 

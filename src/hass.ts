@@ -61,10 +61,15 @@ const transformCurrentWeather = async (): Promise<[TRMNLData, TRMNLData]> => {
 		),
 	}
 
-	const lastEntry = data.weather.at(-1)
-	if (lastEntry) {
-		humidity.name += ` ${lastEntry.relative_humidity}%`
-		temperature.name += ` ${lastEntry.temperature}°C`
+	const reversed = [...data.weather].reverse()
+	const lastHumidity = reversed.find((weather) => weather.relative_humidity)
+	const lastTemperature = reversed.find((weather) => weather.temperature)
+
+	if (lastHumidity) {
+		humidity.name += ` ${lastHumidity.relative_humidity}%`
+	}
+	if (lastTemperature) {
+		temperature.name += ` ${lastTemperature.temperature}°C`
 	}
 
 	return [humidity, temperature]
@@ -76,6 +81,7 @@ export const getHassDetails = async (): Promise<[TRMNLData[], TRMNLData[]]> => {
 	requestUrl.searchParams.set("no_attributes", "")
 	requestUrl.searchParams.set("minimal_response", "")
 
+	console.log("requesting", requestUrl.toString())
 	const dataRequest = await fetch(requestUrl, {
 		headers: {
 			Authorization: `Bearer ${environment.HASS_TOKEN}`,

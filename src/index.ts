@@ -5,6 +5,7 @@ import { checkAuth, publicStaticFile } from "./utility"
 
 Bun.serve({
 	port: environment.DEV_PORT,
+	development: false,
 	routes: {
 		"/ping": new Response("pong"),
 
@@ -32,4 +33,4 @@ Bun.serve({
 	},
 })
 
-console.log(`obsidian-daily-notes server started on port ${environment.DEV_PORT}`)
+console.log(`trmnl-plugin server started on port ${environment.DEV_PORT}`)
