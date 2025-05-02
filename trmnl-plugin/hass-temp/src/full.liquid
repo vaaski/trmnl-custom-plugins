@@ -64,7 +64,7 @@
 					tickAmount: 5,
 				},
 				xAxis: {
-					type: 'daytime',
+					type: 'datetime',
 					labels: {
 						enabled: false,
 						style: {
@@ -74,8 +74,16 @@
 					},
 					lineWidth: 0,
 					gridLineDashStyle: 'dot',
+					min: (() => {
+						const date = new Date()
+						date.setDate(date.getDate() - 1)
+						return date.toISOString()
+					})(),
+					max: new Date().toISOString(),
+					maxPadding: 0,
 					tickWidth: 1,
 					tickLength: 0,
+					tickInterval: 60e3 * 60 * 6,
 					gridLineWidth: 1,
 					gridLineColor: '#000000',
 				},
@@ -89,7 +97,7 @@
 		// {% for col in row %}
 		createChart(
 			'chart-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}',
-			JSON.parse(`{{col.states}}`),
+			JSON.parse(`{{col.states}}`).map(([time, value]) => [new Date(time), value]),
 			JSON.parse(`{{col.minMax}}`),
 			'{{col.name}}',
 			// {% if forloop.index0 != 0 %}
