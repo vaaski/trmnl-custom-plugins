@@ -6,12 +6,23 @@ dotenv: [".env"]
 
 vars:
   DOCKER_TAG: ghcr.io/vaaski/trmnl-custom-plugins:latest
-  DOCKER_ENV_FLAGS: >-
+  DOCKER_SHARED_FLAGS: >-
     -e TRMNL_API_KEY=$TRMNL_API_KEY
+  DOCKER_TRMNLP_FLAGS: >-
+    {{.DOCKER_SHARED_FLAGS}}
+    --rm --name trmnlp --net host
     -e TRMNL_ENDPOINT_NEWS=$TRMNL_ENDPOINT_NEWS
     -e TRMNL_ENDPOINT_OBSIDIAN=$TRMNL_ENDPOINT_OBSIDIAN
     -e TRMNL_ENDPOINT_HASS=$TRMNL_ENDPOINT_HASS
-  DOCKER_TRMNLP_FLAGS: --rm --name trmnlp --net host {{.DOCKER_ENV_FLAGS}}
+  DOCKER_BUN_FLAGS: >-
+    {{.DOCKER_SHARED_FLAGS}}
+    -v $OBSIDIAN_DAILY_NOTES_PATH:/notes
+    -e SERVER_PORT=$SERVER_PORT
+    -e HASS_ADDRESS=$HASS_ADDRESS
+    -e HASS_TOKEN=$HASS_TOKEN
+    -e HASS_ENTITIES=$HASS_ENTITIES
+    -e BRIGHTSKY_LAT=$BRIGHTSKY_LAT
+    -e BRIGHTSKY_LON=$BRIGHTSKY_LON
 
 tasks:
   bun:dev:
@@ -46,5 +57,6 @@ tasks:
       - docker build -t {{.DOCKER_TAG}} .
 
   docker:run:
+    deps: [docker:build]
     cmds:
-      - docker run --rm -it -p 7834:7834 -e TRMNL_API_KEY=$TRMNL_API_KEY -v $OBSIDIAN_DAILY_NOTES_PATH:/notes {{.DOCKER_TAG}}
+      - docker run --rm -it -p 7834:7834 {{.DOCKER_BUN_FLAGS}} {{.DOCKER_TAG}}
