@@ -5,6 +5,6 @@ services:
     ports:
       - 7834:7834
     environment:
-      - SHARED_SECRET=ca8032c34628405599e896008b5c540f8eacda37243f47f5b233fe77117b9c34
+      - TRMNL_API_KEY=""
     volumes:
-      - /Volumes/home/container-data/obsidian/postnotion.new/daily:/notes
+      - /path/to/obsidian/daily/notes:/notes

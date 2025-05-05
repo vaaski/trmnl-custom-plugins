@@ -39,10 +39,7 @@ export const publicStaticFile = async (fileName: string, mimeType: string) => {
 }
 
 export const checkAuth = (request: Request) => {
-	if (
-		request.headers.get("Authorization") !== environment.SHARED_SECRET &&
-		!environment.DISABLE_AUTH
-	) {
+	if (request.headers.get("Authorization") !== environment.TRMNL_API_KEY) {
 		return new Response(undefined, { status: 401 })
 	}
 }

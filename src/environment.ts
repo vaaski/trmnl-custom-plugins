@@ -11,9 +11,8 @@ export const OBSIDIAN_DAILY_NOTES_PATH = getVariable(
 	"OBSIDIAN_DAILY_NOTES_PATH",
 	"/notes",
 )
-export const DEV_PORT = Number.parseInt(getVariable("DEV_PORT", "7834"))
-export const SHARED_SECRET = getVariable("SHARED_SECRET")
-export const DISABLE_AUTH = getVariable("DISABLE_AUTH", "false") === "true"
+export const SERVER_PORT = Number.parseInt(getVariable("SERVER_PORT", "7834"))
+export const TRMNL_API_KEY = getVariable("TRMNL_API_KEY")
 
 export const HASS_ADDRESS = getVariable("HASS_ADDRESS")
 export const HASS_TOKEN = getVariable("HASS_TOKEN")
