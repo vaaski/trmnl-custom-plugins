@@ -1,0 +1,22 @@
+---
+strategy: polling
+no_screen_padding: 'yes'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: "{{ backend_polling_url }}"
+polling_headers: authorization={{ api_key }}
+id: 47402
+custom_fields:
+- keyname: backend_polling_url
+  field_type: url
+  name: Polling URL
+  description: URL of the backend server
+  help_text: Please include http:// or https://
+- keyname: api_key
+  field_type: string
+  name: API Key
+  description: Backend API Key
+  help_text: No need for the "authorization=" prefix
+name: hass-temp
+refresh_interval: 15
