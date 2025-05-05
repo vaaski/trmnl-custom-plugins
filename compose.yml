@@ -5,6 +5,19 @@ services:
     ports:
       - 7834:7834
     environment:
-      - TRMNL_API_KEY=""
+      - TRMNL_API_KEY=
+      - SERVER_PORT=7834
+
+      - HASS_ADDRESS=
+      - HASS_TOKEN=
+      - HASS_ENTITIES=
+
+      - BRIGHTSKY_LAT=
+      - BRIGHTSKY_LON=
+
+      - TRMNL_ENDPOINT_NEWS=http://localhost:7834/news
+      - TRMNL_ENDPOINT_OBSIDIAN=http://localhost:7834/notes
+      - TRMNL_ENDPOINT_HASS=http://localhost:7834/hass
+      - TRMNL_API_KEY=
     volumes:
       - /path/to/obsidian/daily/notes:/notes
