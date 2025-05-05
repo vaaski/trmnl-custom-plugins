@@ -6,7 +6,12 @@ dotenv: [".env"]
 
 vars:
   DOCKER_TAG: ghcr.io/vaaski/trmnl-custom-plugins:latest
-  DOCKER_TRMNLP_FLAGS: --rm --name trmnlp --net host -e SHARED_SECRET=$SHARED_SECRET
+  DOCKER_ENV_FLAGS: >-
+    -e TRMNL_API_KEY=$TRMNL_API_KEY
+    -e TRMNL_ENDPOINT_NEWS=$TRMNL_ENDPOINT_NEWS
+    -e TRMNL_ENDPOINT_OBSIDIAN=$TRMNL_ENDPOINT_OBSIDIAN
+    -e TRMNL_ENDPOINT_HASS=$TRMNL_ENDPOINT_HASS
+  DOCKER_TRMNLP_FLAGS: --rm --name trmnlp --net host {{.DOCKER_ENV_FLAGS}}
 
 tasks:
   bun:dev:
@@ -42,4 +47,4 @@ tasks:
 
   docker:run:
     cmds:
-      - docker run --rm -it -p 7834:7834 -e SHARED_SECRET=$SHARED_SECRET -v $OBSIDIAN_DAILY_NOTES_PATH:/notes {{.DOCKER_TAG}}
+      - docker run --rm -it -p 7834:7834 -e TRMNL_API_KEY=$TRMNL_API_KEY -v $OBSIDIAN_DAILY_NOTES_PATH:/notes {{.DOCKER_TAG}}
